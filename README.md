@@ -1,6 +1,6 @@
 # I2C-Log-File-Analyzer
 This code analyzes I2C communication Log file
-The lof file has data in the following format:
+The log file has data in the following format:
 ITEM  SCL SDA
 0   1   1
 1   1   1
