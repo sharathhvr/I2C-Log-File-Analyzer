@@ -27,10 +27,10 @@ int main()
 	cout << "enter name of output text file with .txt extension" << endl;
 	cin >> fileo;
 	i2c_parse(filei, fileo);
-	cin.get();
+	system("pause");
 }
 //--------------------------------i2c_parse---------------------------------
-void i2c_parse(string inputf,string outf)
+void i2c_parse(string inputf, string outf)
 {
 	int ps;//present state
 	infile.open(inputf);
@@ -72,14 +72,14 @@ void i2c_parse(string inputf,string outf)
 			if (i != 0)
 			{
 				if (scl == '1')
-				{ 
+				{
 					buffer = buffer + sda; //collect all the address bits
 					i--;
 				}
 				ps = 3;
 			}
 			else if (i == 0)
-			{				
+			{
 				string addre = bintohex(buffer);
 				addre = "0x" + addre;
 				addresses[j] = addre;
@@ -99,7 +99,7 @@ void i2c_parse(string inputf,string outf)
 					r++;
 					ps = 5;
 				}
-				if(sda == '1')
+				if (sda == '1')
 				{
 					readwrite[r] = 'R';
 					r++;
@@ -126,16 +126,16 @@ void i2c_parse(string inputf,string outf)
 			break;
 		case 6://data case
 			if (k != 0)
-			{	
+			{
 				if (scl == '1')
-				{  	
+				{
 					bufferd = bufferd + sda; //collect all the address bits
 					k--;
 				}
 				ps = 6;
 			}
 			else if (k == 0)
-			{ 
+			{
 				string addre = bintohex(bufferd);
 				addre = "0x" + addre;
 				datas[l] = addre;
@@ -165,7 +165,7 @@ void i2c_parse(string inputf,string outf)
 			break;
 		case 8: //more data
 			check++;
-			if (scl == '1'||check == 4)
+			if (scl == '1' || check == 4)
 			{
 				if (check == 3)
 				{
@@ -197,9 +197,9 @@ void i2c_parse(string inputf,string outf)
 
 	}//--------end of while loop----AKA state machine-------------
 	infile.close();
-//----------Load to output file-----------------------------------
-	int read=0;
-	int write=0;
+	//----------Load to output file-----------------------------------
+	int read = 0;
+	int write = 0;
 	outfile.open(outf);
 	outfile << "Total number of transactions(including NACK): " << transactions << endl;
 	for (int m = 0; m < 20; m++)
@@ -224,42 +224,42 @@ void i2c_parse(string inputf,string outf)
 }
 
 //-----------------------setdata function to set SCL and SDA-----------------------
-	void setdata()
+void setdata()
+{
+	getline(infile, item);//get each line
+	firstcount++; //ignore the first line
+	if (firstcount != 1)
 	{
-			getline(infile, item);//get each line
-			firstcount++; //ignore the first line
-			if (firstcount != 1)
-			{
-				itemlen = item.length(); //to check for different string lenghts
-				if (itemlen == 9) //when string length
-				{
-					 scl = item[4];
-					 sda = item[8];
-		
-				}
-				if (itemlen == 10)
-				{
-					 scl = item[5];
-					 sda = item[9];
-					
-				}
-				if (itemlen == 11)
-				{
-					 scl = item[6];
-					 sda = item[10];
-					
-				}
-
-			}
+		itemlen = item.length(); //to check for different string lenghts
+		if (itemlen == 9) //when string length
+		{
+			scl = item[4];
+			sda = item[8];
 
 		}
-	
+		if (itemlen == 10)
+		{
+			scl = item[5];
+			sda = item[9];
+
+		}
+		if (itemlen == 11)
+		{
+			scl = item[6];
+			sda = item[10];
+
+		}
+
+	}
+
+}
+
 //-----------------------BINARY TO HEX----------------------------
 string bintohex(string buf)
 {
 	long int longint = 0;
 	int len = buf.size();
-	for (int i = 0; i<len; i++)
+	for (int i = 0; i < len; i++)
 	{
 		longint += (buf[len - i - 1] - 48) * pow(2, i);//decimal
 	}
@@ -282,7 +282,7 @@ string bintohex(string buf)
 		quotient = quotient / 16;
 	}
 	string finals = "";
-	for (j = i - 1; j> 0; j--)
+	for (j = i - 1; j > 0; j--)
 		finals = finals + hexadecimalNumber[j];
 	return finals;
 }
